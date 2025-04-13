@@ -1,7 +1,7 @@
-import pytest
 import time
-import pyautogui
 import re
+import pytest
+import pyautogui
 from playwright.sync_api import sync_playwright
 
 @pytest.fixture(scope="function")
@@ -10,15 +10,14 @@ def browser():
         screen_width, screen_height = pyautogui.size()
 
         browser = p.chromium.launch(headless=False)
-
-        context = edge_browser.new_context(
-            viewport={"width": int(1920), "height": int(1080)}
+        context = browser.new_context(
+            viewport={"width": int(screen_width), "height": int(screen_height)}
         )
-
         page = context.new_page()
-        page.set_default_timeout(10000)
         yield page
-        edge_browser.close()
+        context.close()
+        browser.close()
+
 
 # 1️⃣ Тест заповнення форми
 def test_fill_form(browser):
