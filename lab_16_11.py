@@ -68,6 +68,9 @@ def test_auth_playwright(browser):
 
         time.sleep(2)  # Затримка для відкриття вікна введення
 
+        # Перед використанням pyautogui
+        pyautogui.moveTo(100, 100)  # Переміщаємо мишу подалі від (0, 0)
+        time.sleep(1)
         # Використовуємо PyAutoGUI для введення username та password
         pyautogui.write(username)  
         pyautogui.press("tab")  
