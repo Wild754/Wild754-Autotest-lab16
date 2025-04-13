@@ -38,46 +38,49 @@ def test_fill_form(browser):
     assert "This is a test comment." in browser.content()
 
 # 2️Тест авторизації 
-def test_auth_playwright():
-    with sync_playwright() as p:
-        # Запуск браузера
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
-        
-        # Переходимо на сторінку для базової авторизації
-        page.goto("https://testpages.eviltester.com/styled/auth/basic-auth-test.html")
-        time.sleep(2)
-        
-        # Отримуємо текст username і password
-        username_text = page.locator("xpath=/html/body/div[1]/div[3]/p[3]").text_content()
-        password_text = page.locator("xpath=/html/body/div[1]/div[3]/p[4]").text_content()
-        
-        username_match = re.search(r"username:\s*(\S+)", username_text)
-        password_match = re.search(r"password:\s*(\S+)", password_text)
+def test_auth_playwright(browser):
+    # 1: Переходимо на сторінку для базової авторизації
+    browser.goto("https://testpages.eviltester.com/styled/auth/basic-auth-test.html")
+    time.sleep(2)  # Трохи чекаємо, щоб сторінка повністю завантажилась
 
-        if username_match:
-            username = username_match.group(1)
-            print(f"Username: {username}")
-        else:
-            print("Username не знайдений")
+    # 2: Отримуємо текст username і password
+    username_text = browser.text_content("xpath=/html/body/div[1]/div[3]/p[3]")
+    password_text = browser.text_content("xpath=/html/body/div[1]/div[3]/p[4]")
 
-        if password_match:
-            password = password_match.group(1)
-            print(f"Password: {password}")
-        else:
-            print("Password не знайдений")
+    username_match = re.search(r"username:\s*(\S+)", username_text)
+    password_match = re.search(r"password:\s*(\S+)", password_text)
 
-        # Переходимо за допомогою Playwright без використання pyautogui
-        page.fill('input[name="username"]', username)
-        page.fill('input[name="password"]', password)
-        page.press('input[name="password"]', 'Enter')
+    if username_match:
+        username = username_match.group(1)
+        print(f"Username: {username}")
+    else:
+        print("Username не знайдений")
 
-        time.sleep(5)  # Дочекаємось результатів
+    if password_match:
+        password = password_match.group(1)
+        print(f"Password: {password}")
+    else:
+        print("Password не знайдений")
 
-        # Перевіряємо, чи авторизація пройшла
-        assert "Username and Password in the Basic Auth header were the expected values" in page.content()
+    # 3: Клікаємо на кнопку базової авторизації
+    basic_auth_button = browser.locator("xpath=/html/body/div[1]/div[3]/p[5]/a")
+    basic_auth_button.click()
 
-        browser.close()
+    time.sleep(5)  # Чекаємо, щоб браузер обробив натискання кнопки та оновив сторінку
+
+    # 4: Вводимо дані через pyautogui
+    pyautogui.FAILSAFE = False
+    pyautogui.moveTo(100, 100)
+    pyautogui.write(username)
+    pyautogui.press("tab")
+    pyautogui.write(password)
+    pyautogui.press("enter")
+    pyautogui.FAILSAFE = True
+
+    time.sleep(5)  # Даємо час для обробки запиту
+
+    # Перевіряємо, чи авторизація пройшла
+    assert "Username and Password in the Basic Auth header were the expected values" in browser.content()
 
 
 # 3️⃣ Тест завантаження файлу
