@@ -9,10 +9,7 @@ def browser():
     with sync_playwright() as p:
         screen_width, screen_height = pyautogui.size()
 
-        edge_browser = p.chromium.launch(
-            executable_path="C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
-            headless=False
-        )
+        browser = p.chromium.launch(headless=False)
 
         context = edge_browser.new_context(
             viewport={"width": int(1920), "height": int(1080)}
