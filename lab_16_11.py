@@ -38,52 +38,51 @@ def test_fill_form(browser):
     assert "This is a test comment." in browser.content()
 
 # 2️Тест авторизації 
-def test_auth_playwright(browser):    
-    # Крок 1: Перейти на сторінку з даними авторизації
-        browser.goto("https://testpages.eviltester.com/styled/auth/basic-auth-test.html")
-        time.sleep(2)  # Додаємо затримку для завантаження сторінки
+def test_auth_playwright(browser):
+    # 1: Переходимо на сторінку для базової авторизації
+    browser.goto("https://testpages.eviltester.com/styled/auth/basic-auth-test.html")
+    time.sleep(2)  # Трохи чекаємо, щоб сторінка повністю завантажилась
 
-        # Крок 2: Витягнути username і password з тексту на сторінці
-        username_text = browser.text_content("xpath=/html/body/div[1]/div[3]/p[3]")
-        password_text = browser.text_content("xpath=/html/body/div[1]/div[3]/p[4]")
+    # 2: Отримуємо текст username і password
+    username_text = browser.text_content("xpath=/html/body/div[1]/div[3]/p[3]")
+    password_text = browser.text_content("xpath=/html/body/div[1]/div[3]/p[4]")
 
-        username_match = re.search(r"username:\s*(\S+)", username_text)
-        password_match = re.search(r"password:\s*(\S+)", password_text)
+    username_match = re.search(r"username:\s*(\S+)", username_text)
+    password_match = re.search(r"password:\s*(\S+)", password_text)
 
-        if username_match:
-            username = username_match.group(1)
-            print(f"Username: {username}")
-        else:
-            print("Username не знайдено")
+    if username_match:
+        username = username_match.group(1)
+        print(f"Username: {username}")
+    else:
+        print("Username не знайдений")
 
-        if password_match:
-            password = password_match.group(1)
-            print(f"Password: {password}")
-        else:
-            print("Password не знайдено")
+    if password_match:
+        password = password_match.group(1)
+        print(f"Password: {password}")
+    else:
+        print("Password не знайдений")
 
-        # Крок 3: Натискання кнопки для авторизації
-        basic_auth_button = browser.locator("xpath=/html/body/div[1]/div[3]/p[5]/a")
-        basic_auth_button.click()
+    # 3: Клікаємо на кнопку базової авторизації
+    basic_auth_button = browser.locator("xpath=/html/body/div[1]/div[3]/p[5]/a")
+    basic_auth_button.click()
 
-        time.sleep(2)  # Затримка для відкриття вікна введення
+    time.sleep(5)  # Чекаємо, щоб браузер обробив натискання кнопки та оновив сторінку
 
-        # Перед використанням pyautogui
-# Вимикаємо аварійне завершення тільки на час вводу
-        pyautogui.FAILSAFE = False
-        pyautogui.moveTo(100, 100)
-        pyautogui.write(username)
-        pyautogui.press("tab")
-        pyautogui.write(password)
-        pyautogui.press("enter")
-        pyautogui.FAILSAFE = True  # Якщо хочеш, вмикай назад
+    # 4: Вводимо дані через pyautogui
+    pyautogui.FAILSAFE = False
+    pyautogui.moveTo(100, 100)
+    pyautogui.write(username)
+    pyautogui.press("tab")
+    pyautogui.write(password)
+    pyautogui.press("enter")
+    pyautogui.FAILSAFE = True
 
-        time.sleep(5)  # Затримка для виконання авторизації
+    time.sleep(5)  # Даємо час для обробки запиту
 
-        # Перевірка, чи успішно авторизувалися
-        assert "Username and Password in the Basic Auth header were the expected values" in browser.content()
+    # Перевіряємо, чи авторизація пройшла
+    assert "Username and Password in the Basic Auth header were the expected values" in browser.content()
 
-        browser.close()
+
 # 3️⃣ Тест завантаження файлу
 def test_file_upload(browser):
     browser.goto("https://testpages.eviltester.com/styled/file-upload-test.html")
