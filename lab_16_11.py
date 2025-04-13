@@ -84,10 +84,10 @@ def test_auth_playwright(browser):
     print(f"Current URL: {current_url}")
 
         # Перевірка контенту або URL після авторизації
-        if "basic-auth-test-result" in current_url:
-            print("Авторизація успішна")
-        else:
-            print("Авторизація не вдалася")
+    if "basic-auth-test-result" in current_url:
+        print("Авторизація успішна")
+    else:
+        print("Авторизація не вдалася")
     browser.close()
 
 
