@@ -80,7 +80,7 @@ def test_auth_playwright(browser):
     time.sleep(5)  # Даємо час для обробки запиту
 
     # Перевіряємо, чи авторизація пройшла
-   current_url = page.url
+    current_url = page.url
         print(f"Current URL: {current_url}")
 
         # Перевірка контенту або URL після авторизації
@@ -88,8 +88,7 @@ def test_auth_playwright(browser):
             print("Авторизація успішна")
         else:
             print("Авторизація не вдалася")
-
-        browser.close()
+    browser.close()
 
 
 
